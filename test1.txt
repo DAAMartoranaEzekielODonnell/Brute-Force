@@ -1,0 +1,8 @@
+c This is a comment line. I start with a c and there may be zero or more of me!
+c Comment Line the 2nd
+c Add a third just in case...
+p cnf 4 4
+1 0
+2 0
+3 0
+4 0
