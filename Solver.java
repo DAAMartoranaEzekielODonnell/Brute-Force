@@ -6,6 +6,14 @@ import java.util.ArrayList;
  * formula (specified in the file).
  * 
  * @author Bill Ezekiel
+import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
+/**
+ * Reads files and determines a satisfying assignment for a given
+ * formula (specified in the file).
+ * 
+ * @author Bill Ezekiel
  * @version //Date Here
  */
 public class Solver
@@ -14,14 +22,13 @@ public class Solver
     private Scanner scanner;
     private int varCount;  
     private int clauseCount;   
-    private int debug;
+
     /**
      * Reads a file and sets up a formula based on it's contents.
      * @param filename The name of the file to be read.
      */
-    public ArrayList<Boolean> readFile(String filename,int debug)
+    public ArrayList<Boolean> readFile(String filename)
     {
-        this.debug = debug;
         try
         {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -35,39 +42,33 @@ public class Solver
                     break;
 
                     case 112:
-                    if(debug ==1)
-                    {
-                        System.out.println(currentLine);
-                    }
                     getCounts(currentLine.substring(6));
                     currentLine = reader.readLine();
                     break;
 
                     default:
-                    if(debug ==1)
-                    {
-                        System.out.println(currentLine);
-                    }
                     makeClause(currentLine);
                     currentLine = reader.readLine();
                     break;
                 }
             }
 
-            for(int i = 0; i<Math.pow(2,varCount);i++)
+            double start = System.currentTimeMillis(); 
+            double iterations = Math.pow(2,varCount);
+            for(int i = 0; i<iterations;i++)
             {
                 ArrayList<Boolean> currentList = intToBooList(i);
                 if(formula.satisfies(currentList))
                 {
+                    System.out.println(System.currentTimeMillis()- start);
                     System.out.println(currentList);
                     return currentList;
                 }
-
             }
+            System.out.println(System.currentTimeMillis()- start);
         }
         catch(IOException ioe)
         {System.out.println("Invalid filename '"+filename+"'");}
-
         System.out.println("No Match");
         return null;  
     }
@@ -81,13 +82,11 @@ public class Solver
         scanner = new Scanner(line);
         varCount = scanner.nextInt();
         clauseCount = scanner.nextInt();
-        if(debug == 1)
-        {
-            System.out.println("Variables: "+varCount);
-            System.out.println("Clauses: "+clauseCount);
-        }
     }
 
+    /**
+     * Converts an integer to a list of boolean values.
+     */
     public ArrayList<Boolean> intToBooList(int num)
     {
         ArrayList<Boolean> result = new ArrayList();
@@ -96,7 +95,7 @@ public class Solver
         {
             binary = "0".concat(binary);
         }
-        for(int i = 0; i<binary.length();i++)
+        for(int i = 0;i<binary.length();i++)
         {
             if(binary.charAt(i) == '0')
             {
@@ -110,20 +109,19 @@ public class Solver
         return result;
     }
 
+    /**
+     * Create a clause
+     */
     private void makeClause(String s)
     {
-        if(formula.size()<clauseCount)
+        Clause c = new Clause();
+        scanner = new Scanner(s);
+        while(scanner.hasNextInt())
         {
-            Clause c = new Clause();
-            scanner = new Scanner(s);
-            while(scanner.hasNextInt())
-            {
-                int next = scanner.nextInt();
-                if(next!=0)
-                {c.addVariable(next);}
-
-            }
-            formula.addClause(c);
+            int next = scanner.nextInt();
+            if(next!=0)
+            {c.addVariable(new Variable(true,next));}
         }
+        formula.addClause(c);
     }
 }
