@@ -8,35 +8,22 @@ import java.util.ArrayList;
 public class Formula
 {
     private ArrayList<Clause> clauses = new ArrayList();
-    private boolean value;
-
-    public Formula()
-    {
-    }
 
     /**
      * Evaluate this clause
      */
     public boolean satisfies(ArrayList<Boolean> b)
     {
-        value = true;
-        for(int i = 0; i<clauses.size()&&value;i++)
+        for(Clause c: clauses)
         {
-            if(clauses.get(i).satisfies(b) == false)
-            {
-                value = false;            
-            }
+            if(!(c.satisfies(b)))
+                return false;       
         }
-        return value;
+        return true;
     }
-    
+
     public void addClause(Clause c)
     {
         clauses.add(c);
-    }
-
-    public int size()
-    {
-        return clauses.size();
     }
 }
