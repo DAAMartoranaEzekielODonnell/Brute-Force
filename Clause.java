@@ -7,58 +7,30 @@ import java.util.ArrayList;
  */
 public class Clause
 {
-    private ArrayList<Integer> varValues = new ArrayList();
-    private boolean value;
-
+    private ArrayList<Variable> variables = new ArrayList();   
     /**
-     * Constructor for Clause
+     * Evaluate this clause.
+     * @return true only if this clause is true.
      */
-    public Clause()
-    {  
-    }
-
-    /**
-     * Evaluate this clause given specific values for variables.
-     */
-    public boolean satisfies(ArrayList<Boolean> booValues)
+    public boolean satisfies(ArrayList<Boolean> b)
     {
-        booValues = negate(booValues);
-        for(int i = 0; i<varValues.size()&&!value;i++)
+        for(int i = 0; i<variables.size();i++)
         {
-            if(booValues.get(Math.abs(varValues.get(i))-1) == true)
-            {
+            Variable v = variables.get(i);
+            v.setValue(b.get(Math.abs(v.getNumber())-1));
+        }
+        for(Variable v: variables)
+        {
+            if(v.getValue())
                 return true;
-            }
         }
         return false;
     }
-    
-    public void setVarValues(ArrayList<Integer> values)
-    {
-        varValues = values;
-    }
-    
-    public void addVariable(int var)
-    {
-        varValues.add(var);
-    }
-    
+
     /**
-     * Negates any values that should be negated. 
+     * Add a variable to this clause.
+     * @param v The variable to be added.
      */
-    public ArrayList<Boolean> negate(ArrayList<Boolean> booValues)
-    {
-        ArrayList<Boolean> b = new ArrayList(booValues);
-        for(int i = 0; i<varValues.size();i++)
-        {
-            int var = varValues.get(i);
-            if(var<0)
-            {
-                var*=-1; //make negative value positive to a void Index Out of Bounds
-                b.set(var-1,!b.get(var-1));
-            }
-        }
-        return b;
-    }
-    
+    public void addVariable(Variable v)
+    {variables.add(v);}
 }
