@@ -1,3 +1,4 @@
+
 /**
  * Write a description of class Driver here.
  * 
@@ -10,10 +11,8 @@ public class Driver
 
     public Driver()
     {
-       //solver.readFile("test1.txt"); //f f f f
-        solver.readFile("s28.cnf");
-        //make sure to only ready one file at a time
-        //or it won't work properly.
+        //solver.readFile("test1.txt"); //t t t t 
+        solver.readFile("u32.cnf"); 
     }
 
 }
