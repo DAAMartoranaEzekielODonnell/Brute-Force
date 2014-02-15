@@ -7,21 +7,22 @@ import java.util.ArrayList;
  */
 public class Clause
 {
-    private ArrayList<Variable> variables = new ArrayList();   
+    private ArrayList<Variable> variables;
+    
+    public Clause(int n)
+    {
+        variables = new ArrayList(n); 
+    }
+    
     /**
      * Evaluate this clause.
      * @return true only if this clause is true.
      */
     public boolean satisfies(ArrayList<Boolean> b)
     {
-        for(int i = 0; i<variables.size();i++)
-        {
-            Variable v = variables.get(i);
-            v.setValue(b.get(Math.abs(v.getNumber())-1));
-        }
         for(Variable v: variables)
-        {
-            if(v.getValue())
+        {  
+            if(v.getValue(b.get(Math.abs(v.getNumber())-1)))
                 return true;
         }
         return false;
