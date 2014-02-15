@@ -1,35 +1,34 @@
 
 /**
  * A Variable that has a number
- * and a boolean value
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
 public class Variable
 {
-    private boolean value;
     private int number;
-
     /**
      * Constructor for a Variable
      */
-    public Variable(boolean b, int i)
+    public Variable(int i)
     {
-        value = b;
         number = i;
     }
 
-    public boolean getValue()
+    /**
+     * @param b  A boolean 
+     */
+    public boolean getValue(boolean b)
     {
         if(number>0)
-        {return value;}
-        return !value;
+        {return b;}
+        return !b;
     }
 
+    /**
+     * @return this variable's number
+     */
     public int getNumber()
     {return number;}
-
-    public void setValue(boolean value)
-    {this.value = value;}
 }
