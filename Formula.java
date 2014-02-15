@@ -7,7 +7,12 @@ import java.util.ArrayList;
  */
 public class Formula
 {
-    private ArrayList<Clause> clauses = new ArrayList();
+    private ArrayList<Clause> clauses;
+    
+    public Formula(int n)
+    {
+        clauses = new ArrayList(n);
+    }
 
     /**
      * Evaluate this clause
