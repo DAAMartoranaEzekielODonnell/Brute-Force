@@ -6,19 +6,11 @@ import java.util.ArrayList;
  * formula (specified in the file).
  * 
  * @author Bill Ezekiel
-import java.util.Scanner;
-import java.io.*;
-import java.util.ArrayList;
-/**
- * Reads files and determines a satisfying assignment for a given
- * formula (specified in the file).
- * 
- * @author Bill Ezekiel
  * @version //Date Here
  */
 public class Solver
 {
-    private Formula formula = new Formula();
+    private Formula formula;
     private Scanner scanner;
     private int varCount;  
     private int clauseCount;   
@@ -44,6 +36,7 @@ public class Solver
                     case 112:
                     getCounts(currentLine.substring(6));
                     currentLine = reader.readLine();
+                    formula = new Formula(clauseCount);  //we will have clause count by this time.
                     break;
 
                     default:
@@ -53,7 +46,7 @@ public class Solver
                 }
             }
 
-            double start = System.currentTimeMillis(); 
+            double start = System.currentTimeMillis();
             double iterations = Math.pow(2,varCount);
             for(int i = 0; i<iterations;i++)
             {
@@ -89,7 +82,7 @@ public class Solver
      */
     public ArrayList<Boolean> intToBooList(int num)
     {
-        ArrayList<Boolean> result = new ArrayList();
+        ArrayList<Boolean> result = new ArrayList(varCount);
         String binary = Integer.toBinaryString(num);
         while(binary.length()<varCount)
         {
@@ -114,13 +107,13 @@ public class Solver
      */
     private void makeClause(String s)
     {
-        Clause c = new Clause();
+        Clause c = new Clause(varCount);
         scanner = new Scanner(s);
         while(scanner.hasNextInt())
         {
             int next = scanner.nextInt();
             if(next!=0)
-            {c.addVariable(new Variable(true,next));}
+            {c.addVariable(new Variable(next));}
         }
         formula.addClause(c);
     }
