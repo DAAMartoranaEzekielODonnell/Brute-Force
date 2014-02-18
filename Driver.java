@@ -1,18 +1,23 @@
 
 /**
- * Write a description of class Driver here.
+ * A Driver to test the solver. 
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Bill Ezekiel, Matthew Martorana, James O'Donnell 
+ * @version (2/17/14)
  */
 public class Driver
 {
-    private Solver solver = new Solver();
+    private static Solver solver = new Solver();
 
-    public Driver()
+    public static void main()
     {
-        //solver.readFile("test1.txt"); //t t t t 
-        solver.readFile("u32.cnf"); 
+        String filename = "u32.cnf";
+        if(solver.readFile(filename)) 
+        {
+            //double start = System.currentTimeMillis();    
+            solver.solve();
+            //System.out.println(System.currentTimeMillis()- start);
+        }
     }
 
 }
