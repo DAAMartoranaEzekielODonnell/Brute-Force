@@ -2,11 +2,10 @@ import java.util.Scanner;
 import java.io.*;
 import java.util.ArrayList;
 /**
- * Reads files and determines a satisfying assignment for a given
- * formula (specified in the file).
+ * Reads files and attempts to solve boolean formulas.
  * 
- * @author Bill Ezekiel
- * @version //Date Here
+ * @author Bill Ezekiel, Matthew Martorana, James O'Donnell 
+ * @version (2/17/14)
  */
 public class Solver
 {
@@ -18,8 +17,9 @@ public class Solver
     /**
      * Reads a file and sets up a formula based on it's contents.
      * @param filename The name of the file to be read.
+     * @return true if the file was successfully read. 
      */
-    public ArrayList<Boolean> readFile(String filename)
+    public boolean readFile(String filename)
     {
         try
         {
@@ -29,46 +29,66 @@ public class Solver
             {
                 switch(currentLine.charAt(0))
                 {
-                    case 99:
+                    case 99: //99 = c comment line.
                     currentLine = reader.readLine();
                     break;
 
-                    case 112:
+                    case 112: //112 = p "p cnf" line
                     getCounts(currentLine.substring(6));
                     currentLine = reader.readLine();
                     formula = new Formula(clauseCount);  //we will have clause count by this time.
                     break;
 
-                    default:
+                    default: //remaining lines
                     makeClause(currentLine);
                     currentLine = reader.readLine();
                     break;
                 }
             }
-
-            double start = System.currentTimeMillis();
-            double iterations = Math.pow(2,varCount);
-            for(int i = 0; i<iterations;i++)
-            {
-                ArrayList<Boolean> currentList = intToBooList(i);
-                if(formula.satisfies(currentList))
-                {
-                    System.out.println(System.currentTimeMillis()- start);
-                    System.out.println(currentList);
-                    return currentList;
-                }
-            }
-            System.out.println(System.currentTimeMillis()- start);
+            return true; //file successfully read
         }
         catch(IOException ioe)
-        {System.out.println("Invalid filename '"+filename+"'");}
+        {
+            System.out.println("Invalid filename '"+filename+"'");
+            return false;
+        }
+    }
+
+    /**
+     * Solve the formula. 
+     * @return an ArrayList of boolean values corresponding to values assigned to variables.
+     * Example: [true,false,true,true] means
+     * x1 = true
+     * x2 = false
+     * x3 = true
+     * x4 = true
+     */
+    public ArrayList<Boolean> solve()
+    {
+        double iterations = Math.pow(2,varCount);  //2^varCount
+        double start = System.currentTimeMillis();    
+        int tenth = (int) iterations/10;
+
+        for(int i = 0; i<(iterations);i++)
+        {
+            if(i%tenth == 0)
+            {
+                System.out.println(System.currentTimeMillis()- start);
+            }
+            ArrayList<Boolean> currentList = intToBooList(i);
+            if(formula.satisfies(currentList))
+            {
+                System.out.println(currentList);
+                return currentList;
+            }
+        }
         System.out.println("No Match");
         return null;  
     }
 
     /**
      * Gets the variable count and clause count
-     * @param line the line 
+     * @param line the line from which data is read.
      */
     private void getCounts(String line)
     {
@@ -78,7 +98,12 @@ public class Solver
     }
 
     /**
-     * Converts an integer to a list of boolean values.
+     * Converts an integer to a list of boolean values by first
+     * converting it to a string representation of its 
+     * binary form. The string is then converted to the list. 
+     * 16 -> [1,0,0,0,0]
+     * @param num The integer to convert
+     * @return An ArrayList of boolean values corresponding to num in binary. 
      */
     public ArrayList<Boolean> intToBooList(int num)
     {
@@ -86,17 +111,17 @@ public class Solver
         String binary = Integer.toBinaryString(num);
         while(binary.length()<varCount)
         {
-            binary = "0".concat(binary);
+            binary = "0".concat(binary); //add 0's to make size of list the amount of variables.
         }
         for(int i = 0;i<binary.length();i++)
         {
-            if(binary.charAt(i) == '0')
+            if(binary.charAt(i) == '0')  //0 -> false
             {
                 result.add(false);
             }
-            else
+            else                        
             {
-                result.add(true);
+                result.add(true); //1 -> true
             }
         }
         return result;
@@ -104,6 +129,7 @@ public class Solver
 
     /**
      * Create a clause
+     * @param s A string where information about the clause is acquired.
      */
     private void makeClause(String s)
     {
@@ -112,9 +138,9 @@ public class Solver
         while(scanner.hasNextInt())
         {
             int next = scanner.nextInt();
-            if(next!=0)
+            if(next!=0)  //0 signifies the end of clause
             {c.addVariable(new Variable(next));}
         }
-        formula.addClause(c);
+        formula.addClause(c); //add clause to the formula
     }
 }
