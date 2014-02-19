@@ -1,0 +1,66 @@
+import java.util.ArrayList;
+/**
+ * Write a description of class FormulaB here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Formula
+{
+    ArrayList<ArrayList<Integer>> clauses;
+
+    /**
+     * Create a formula with 'n' clauses.
+     * @param n the number of clauses in this formula.
+     */
+    public Formula(int n)
+    {
+        clauses = new ArrayList(n);
+    }
+
+    /**
+     * Evaluate this formula using a collection of boolean values.
+     * @param b An ArrayList containing boolean values.
+     * @return true only if this formula evaluates to true.
+     */
+    public boolean satisfies(boolean[] b)
+    {
+        boolean result = true;
+        for(int i = 0; i<clauses.size();i++)
+        {
+            ArrayList<Integer> c = clauses.get(i);
+            boolean clauseValue = false;
+            //clause loop
+            for(int j = 0; j < c.size() && !clauseValue; j++)
+            {
+                int num = c.get(j);
+                boolean value;
+                if(num < 0)
+                {
+                    num*=-1;
+                    value = !(b[num - 1]);
+                }
+                else
+                {
+                    value = b[num-1];
+                }
+                if(value)
+                {
+                    clauseValue = true;
+                }
+            }
+            if(!clauseValue)
+            {return false;}
+        }
+        return result;
+    }
+
+    /**
+     * Add a clause to this formula
+     * @param c the clause to be added.
+     */
+    public void addClause(ArrayList<Integer> clause)
+    {
+        clauses.add(clause);
+    }
+}
