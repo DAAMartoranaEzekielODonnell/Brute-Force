@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Reads files and attempts to solve boolean formulas.
  * 
  * @author Bill Ezekiel, Matthew Martorana, James O'Donnell 
- * @version (2/17/14)
+ * @version (2/19/14)
  */
 public class Solver
 {
@@ -57,7 +57,7 @@ public class Solver
 
     /**
      * Solve the formula. 
-     * @return an ArrayList of boolean values corresponding to values assigned to variables.
+     * @return an array of boolean values corresponding to values assigned to variables.
      * Example: [true,false,true,true] means
      * x1 = true
      * x2 = false
@@ -100,14 +100,18 @@ public class Solver
      * converting it to a string representation of its 
      * binary form. The string is then converted to the list. 
      * 16 -> [1,0,0,0,0]
-     * @param num The integer to convert
+     * @param num The number to conver to binary
+     * @param array an array of booleans already established in order
+     *               to help speed up conversion
      * @return An ArrayList of boolean values corresponding to num in binary. 
      */
     public boolean[] intToBooArray(double num,boolean[] array)
     {
         int newNum = (int) num; //contains the original number in integer form.
         for(int i = array.length - 1;newNum!=0;i--)
-        {
+        { //Using this set up, we only change as many digits
+          //as we need to, and don't try chaning all binary digits
+          //when it isn't necessary.
             if(newNum%2 == 1)  //1 -> false
             {
                 array[i] = true;
