@@ -20,7 +20,7 @@ public class Formula
 
     /**
      * Evaluate this formula using a collection of boolean values.
-     * @param b An ArrayList containing boolean values.
+     * @param b An array containing boolean values.
      * @return true only if this formula evaluates to true.
      */
     public boolean satisfies(boolean[] b)
@@ -57,7 +57,7 @@ public class Formula
 
     /**
      * Add a clause to this formula
-     * @param c the clause to be added.
+     * @param c an ArrayList representingthe clause to be added.
      */
     public void addClause(ArrayList<Integer> clause)
     {
